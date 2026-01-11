@@ -6,45 +6,45 @@
 <div class="space-y-6">
     <!-- 返回按钮 -->
     <div>
-        <a href="{% url 'ai_model_list' %}" class="text-blue-600 hover:text-blue-800">
+        <a href="{% url 'ai_model_list' %}" class="glass-button ripple text-white px-4 py-2 rounded-xl inline-flex items-center text-shadow font-medium">
             ← 返回列表
         </a>
     </div>
 
     <!-- 模型详情卡片 -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
-            <h1 class="text-3xl font-bold text-white">{{ model.name }}</h1>
-            <p class="text-blue-100 mt-2">版本: {{ model.version }}</p>
+    <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="glass-strong px-6 py-8 border-b-2 border-white/20">
+            <h1 class="text-4xl font-bold text-white text-shadow-strong">✨ {{ model.name }}</h1>
+            <p class="text-white/90 mt-2 text-lg text-shadow">📌 版本: {{ model.version }}</p>
         </div>
 
         <div class="p-6 space-y-6">
             <!-- 基本信息 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">基本信息</h3>
+                <div class="glass-card rounded-xl p-4">
+                    <h3 class="text-xl font-bold text-white text-shadow-strong mb-4">📋 基本信息</h3>
                     <dl class="space-y-3">
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">模型类型</dt>
+                            <dt class="text-sm font-bold text-white/80 text-shadow">🏷️ 模型类型</dt>
                             <dd class="mt-1">
-                                <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
+                                <span class="px-3 py-1 inline-flex text-sm font-bold rounded-full glass-button text-white text-shadow badge-glow">
                                     {{ model.model_type.name }}
                                 </span>
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">开发者/组织</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ model.developer }}</dd>
+                            <dt class="text-sm font-bold text-white/80 text-shadow">👤 开发者/组织</dt>
+                            <dd class="mt-1 text-sm text-white font-medium text-shadow">{{ model.developer }}</dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">发布日期</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ model.release_date|date:"Y年m月d日" }}</dd>
+                            <dt class="text-sm font-bold text-white/80 text-shadow">📅 发布日期</dt>
+                            <dd class="mt-1 text-sm text-white font-medium text-shadow">{{ model.release_date|date:"Y年m月d日" }}</dd>
                         </div>
                         {% if model.website_url %}
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">官网地址</dt>
+                            <dt class="text-sm font-bold text-white/80 text-shadow">🌐 官网地址</dt>
                             <dd class="mt-1 text-sm">
-                                <a href="{{ model.website_url }}" target="_blank" class="text-blue-600 hover:underline">
+                                <a href="{{ model.website_url }}" target="_blank" class="text-blue-200 hover:text-blue-100 underline text-shadow font-medium">
                                     {{ model.website_url }}
                                 </a>
                             </dd>
@@ -53,98 +53,98 @@
                     </dl>
                 </div>
 
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">技术参数</h3>
+                <div class="glass-card rounded-xl p-4">
+                    <h3 class="text-xl font-bold text-white text-shadow-strong mb-4">⚙️ 技术参数</h3>
                     <dl class="space-y-3">
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">参数量</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ model.parameters_count|floatformat:0 }} 个参数</dd>
+                            <dt class="text-sm font-bold text-white/80 text-shadow">🔢 参数量</dt>
+                            <dd class="mt-1 text-sm text-white font-medium text-shadow">{{ model.parameters_count|floatformat:0 }} 个参数</dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">准确率</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ model.accuracy_score }}%</dd>
+                            <dt class="text-sm font-bold text-white/80 text-shadow">📊 准确率</dt>
+                            <dd class="mt-1 text-sm text-yellow-200 font-bold text-shadow-strong">{{ model.accuracy_score }}%</dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">训练时长</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ model.training_hours }} 小时</dd>
+                            <dt class="text-sm font-bold text-white/80 text-shadow">⏱️ 训练时长</dt>
+                            <dd class="mt-1 text-sm text-white font-medium text-shadow">{{ model.training_hours }} 小时</dd>
                         </div>
                     </dl>
                 </div>
             </div>
 
             <!-- 模型描述 -->
-            <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">模型描述</h3>
-                <p class="text-sm text-gray-700 leading-relaxed">{{ model.description }}</p>
+            <div class="glass-card rounded-xl p-4">
+                <h3 class="text-xl font-bold text-white text-shadow-strong mb-3">📝 模型描述</h3>
+                <p class="text-sm text-white/90 leading-relaxed text-shadow font-medium">{{ model.description }}</p>
             </div>
 
             <!-- 状态标签 -->
-            <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">状态标签</h3>
+            <div class="glass-card rounded-xl p-4">
+                <h3 class="text-xl font-bold text-white text-shadow-strong mb-3">🏆 状态标签</h3>
                 <div class="flex flex-wrap gap-2">
                     {% if model.is_open_source %}
-                    <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                        开源
+                    <span class="px-3 py-1 inline-flex text-sm font-bold rounded-full bg-green-500/40 text-green-100 border-2 border-green-400/60 backdrop-blur-sm badge-glow">
+                        🔓 开源
                     </span>
                     {% else %}
-                    <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-gray-100 text-gray-800">
-                        闭源
+                    <span class="px-3 py-1 inline-flex text-sm font-bold rounded-full bg-gray-500/40 text-gray-100 border-2 border-gray-400/60 backdrop-blur-sm">
+                        🔒 闭源
                     </span>
                     {% endif %}
 
                     {% if model.is_commercial %}
-                    <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-purple-100 text-purple-800">
-                        商用
+                    <span class="px-3 py-1 inline-flex text-sm font-bold rounded-full bg-purple-500/40 text-purple-100 border-2 border-purple-400/60 backdrop-blur-sm badge-glow">
+                        💼 商用
                     </span>
                     {% endif %}
 
                     {% if model.is_active %}
-                    <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
-                        启用中
+                    <span class="px-3 py-1 inline-flex text-sm font-bold rounded-full bg-blue-500/40 text-blue-100 border-2 border-blue-400/60 backdrop-blur-sm badge-glow">
+                        ⚡ 启用中
                     </span>
                     {% else %}
-                    <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full bg-red-100 text-red-800">
-                        已停用
+                    <span class="px-3 py-1 inline-flex text-sm font-bold rounded-full bg-red-500/40 text-red-100 border-2 border-red-400/60 backdrop-blur-sm">
+                        ⏸️ 已停用
                     </span>
                     {% endif %}
                 </div>
             </div>
 
             <!-- 联系信息 -->
-            <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">联系方式</h3>
+            <div class="glass-card rounded-xl p-4">
+                <h3 class="text-xl font-bold text-white text-shadow-strong mb-3">📞 联系方式</h3>
                 <dl class="space-y-2">
                     <div>
-                        <dt class="text-sm font-medium text-gray-500">邮箱</dt>
-                        <dd class="mt-1 text-sm text-gray-900">
-                            <a href="mailto:{{ model.contact_email }}" class="text-blue-600 hover:underline">
+                        <dt class="text-sm font-bold text-white/80 text-shadow">📧 邮箱</dt>
+                        <dd class="mt-1 text-sm">
+                            <a href="mailto:{{ model.contact_email }}" class="text-blue-200 hover:text-blue-100 underline text-shadow font-medium">
                                 {{ model.contact_email }}
                             </a>
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-sm font-medium text-gray-500">电话</dt>
-                        <dd class="mt-1 text-sm text-gray-900">{{ model.contact_phone }}</dd>
+                        <dt class="text-sm font-bold text-white/80 text-shadow">📱 电话</dt>
+                        <dd class="mt-1 text-sm text-white font-medium text-shadow">{{ model.contact_phone }}</dd>
                     </div>
                 </dl>
             </div>
 
             <!-- 元信息 -->
-            <div class="pt-4 border-t border-gray-200">
-                <div class="text-xs text-gray-500 space-y-1">
-                    <p>创建时间: {{ model.created_at|date:"Y-m-d H:i:s" }}</p>
-                    <p>更新时间: {{ model.updated_at|date:"Y-m-d H:i:s" }}</p>
+            <div class="pt-4 border-t-2 border-white/20">
+                <div class="text-xs text-white/70 space-y-1 text-shadow font-medium">
+                    <p>🕐 创建时间: {{ model.created_at|date:"Y-m-d H:i:s" }}</p>
+                    <p>🔄 更新时间: {{ model.updated_at|date:"Y-m-d H:i:s" }}</p>
                 </div>
             </div>
 
             <!-- 操作按钮 -->
             {% if user.is_authenticated %}
-            <div class="flex space-x-4 pt-4 border-t border-gray-200">
-                <a href="{% url 'ai_model_edit' model.pk %}" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                    编辑模型
+            <div class="flex space-x-4 pt-4 border-t-2 border-white/20">
+                <a href="{% url 'ai_model_edit' model.pk %}" class="glass-button ripple text-white px-6 py-3 rounded-xl font-bold text-shadow hover:scale-105 transition-transform">
+                    ✏️ 编辑模型
                 </a>
-                <a href="{% url 'ai_model_delete' model.pk %}" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
-                    删除模型
+                <a href="{% url 'ai_model_delete' model.pk %}" class="glass-button ripple text-white px-6 py-3 rounded-xl font-bold text-shadow hover:scale-105 transition-transform" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));">
+                    🗑️ 删除模型
                 </a>
             </div>
             {% endif %}

@@ -16,7 +16,10 @@
       "Bash(py -c \"import os; os.path.exists\\(''db.sqlite3''\\) and os.remove\\(''db.sqlite3''\\)\")",
       "Bash(git init)",
       "Bash(git remote add origin https://github.com/Szyovo/web_ai.git)",
-      "Bash(git add .)"
+      "Bash(git add .)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial commit: AI Model Management System with Glassmorphism UI\n\n🎨 Features:\n- Complete Django-based AI model management system\n- User authentication \\(registration, login, logout\\)\n- Full CRUD operations for AI models and model types\n- Advanced search and filtering functionality\n- Pagination with 10 items per page\n- CSV export functionality\n- Cascade delete for related models\n\n💎 UI Design:\n- Modern Glassmorphism \\(liquid glass\\) design\n- Dynamic gradient background with animations\n- 12+ interactive animations \\(hover/click triggered\\)\n- Enhanced text shadows for readability\n- Glass-styled form inputs and selects\n- 3D card tilt effects on model type cards\n- Responsive design for all devices\n\n🔧 Technical Stack:\n- Django 5.0.1\n- SQLite database\n- Tailwind CSS\n- Session-based authentication\n- Django decorators for permissions\n- 30 pre-populated AI models for demo\n\n📦 Includes:\n- Complete project documentation\n- Quick start guides\n- UI enhancement documentation\n- Easy setup with init_and_run.py\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git branch -M main)",
+      "Bash(git push -u origin main)"
     ]
   }
 }
