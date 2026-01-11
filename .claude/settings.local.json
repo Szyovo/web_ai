@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python manage.py makemigrations)",
+      "Bash(py --version)",
+      "Bash(py manage.py makemigrations)",
+      "Bash(py -m pip install Django==5.0.1)",
+      "Bash(py manage.py check)",
+      "Bash(dir)",
+      "Bash(py -c \"import django; print\\(django.get_version\\(\\)\\)\")",
+      "Bash(py manage.py)",
+      "Bash(py test_config.py)",
+      "Bash(py init_and_run.py)",
+      "Bash(del db.sqlite3)",
+      "Bash(if exist db.sqlite3 del db.sqlite3)",
+      "Bash(py -c \"import os; os.path.exists\\(''db.sqlite3''\\) and os.remove\\(''db.sqlite3''\\)\")",
+      "Bash(git init)",
+      "Bash(git remote add origin https://github.com/Szyovo/web_ai.git)",
+      "Bash(git add .)"
+    ]
+  }
+}

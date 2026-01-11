@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI大模型管理系统{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 粒子背景效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: particleFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { opacity: 1; transform: translateY(0px); }
+            50% { opacity: 0.8; transform: translateY(-20px); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 增强的玻璃效果 - 更强的对比度 */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow:
+                0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow:
+                0 8px 32px 0 rgba(31, 38, 135, 0.4),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.6),
+                0 0 60px rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            box-shadow:
+                0 12px 40px 0 rgba(31, 38, 135, 0.45),
+                inset 0 2px 0 0 rgba(255, 255, 255, 0.5),
+                0 0 80px rgba(255, 255, 255, 0.15);
+            position: relative;
+        }
+
+        /* 卡片3D倾斜效果 */
+        .glass-card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-card-3d:hover {
+            transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-8px);
+        }
+
+        /* 光泽按钮效果 - 增强 */
+        .glass-button {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.15));
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
+            box-shadow:
+                0 4px 20px 0 rgba(31, 38, 135, 0.35),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 按钮光晕效果 */
+        .glass-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .glass-button:hover::before {
+            opacity: 1;
+            animation: buttonGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes buttonGlow {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, 10%) scale(1.1); }
+        }
+
+        .glass-button:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.25));
+            transform: translateY(-3px) scale(1.02);
+            box-shadow:
+                0 8px 30px 0 rgba(31, 38, 135, 0.5),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.7),
+                0 0 30px rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .glass-button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* 优化的输入框玻璃效果 */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px) saturate(180%);
+            -webkit-backdrop-filter: blur(8px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.35);
+            border-color: rgba(255, 255, 255, 0.6);
+            outline: none;
+            box-shadow:
+                0 0 0 3px rgba(255, 255, 255, 0.2),
+                0 4px 20px rgba(255, 255, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 修复下拉框样式 */
+        .glass-select {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px) saturate(180%);
+            -webkit-backdrop-filter: blur(8px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .glass-select option {
+            background: rgba(100, 100, 255, 0.95);
+            color: #ffffff;
+            padding: 10px;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-select option:hover,
+        .glass-select option:checked {
+            background: rgba(120, 120, 255, 1);
+            font-weight: 600;
+        }
+
+        .glass-select:focus {
+            background: rgba(255, 255, 255, 0.35);
+            border-color: rgba(255, 255, 255, 0.6);
+            outline: none;
+            box-shadow:
+                0 0 0 3px rgba(255, 255, 255, 0.2),
+                0 4px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 表格玻璃效果增强 */
+        .glass-table {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+        }
+
+        .glass-table thead {
+            background: rgba(255, 255, 255, 0.25);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        /* 增强的文字阴影 */
+        .text-shadow {
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .text-shadow-strong {
+            text-shadow:
+                0 3px 6px rgba(0, 0, 0, 0.5),
+                0 6px 12px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 255, 255, 0.15);
+            font-weight: 700;
+        }
+
+        /* 悬浮动画增强 */
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-15px) scale(1.01);
+            }
+        }
+
+        /* 脉冲光晕效果 */
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow:
+                    0 12px 40px 0 rgba(31, 38, 135, 0.45),
+                    0 0 60px rgba(255, 255, 255, 0.2);
+            }
+            50% {
+                box-shadow:
+                    0 12px 40px 0 rgba(31, 38, 135, 0.45),
+                    0 0 100px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        /* 波纹效果 */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .ripple:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 标签徽章效果 */
+        .badge-glow {
+            position: relative;
+        }
+
+        .badge-glow::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .badge-glow:hover::before {
+            opacity: 1;
+            animation: badgeShine 1.5s linear infinite;
+        }
+
+        @keyframes badgeShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        /* 导航栏背景光效 - 移除自动动画 */
+        /* nav.glass-strong::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: navShine 8s linear infinite;
+        }
+
+        @keyframes navShine {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        } */
+
+        /* 链接悬停效果增强 */
+        a.nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        a.nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        a.nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 加载动画 */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        /* 卡片边缘光效 */
+        .card-border-glow {
+            position: relative;
+        }
+
+        .card-border-glow::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(45deg,
+                rgba(255, 255, 255, 0.5),
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.5)
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card-border-glow:hover::before {
+            opacity: 1;
+        }
+
+        /* 优化z-index层级 */
+        nav { z-index: 100 !important; }
+        main { z-index: 2; position: relative; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 导航栏 - 增强的液态玻璃效果 -->
+    <nav class="glass-strong sticky top-0 z-50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="{% url 'ai_model_list' %}" class="text-white text-xl font-bold hover:text-blue-100 transition text-shadow-strong" style="text-decoration: none;">
+                        🤖 AI大模型管理系统
+                    </a>
+                    <div class="hidden md:flex space-x-4">
+                        <a href="{% url 'ai_model_list' %}" class="nav-link text-white hover:text-blue-100 px-3 py-2 rounded-lg glass-button transition text-shadow">
+                            📊 模型列表
+                        </a>
+                        <a href="{% url 'model_type_list' %}" class="nav-link text-white hover:text-blue-100 px-3 py-2 rounded-lg glass-button transition text-shadow">
+                            🏷️ 模型类型
+                        </a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'ai_model_create' %}" class="nav-link text-white hover:text-blue-100 px-3 py-2 rounded-lg glass-button transition text-shadow">
+                            ✨ 创建模型
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <span class="text-white text-shadow font-medium">👋 你好, <span class="font-bold">{{ user.username }}</span></span>
+                        <a href="{% url 'logout' %}" class="glass-button ripple text-white px-4 py-2 rounded-lg hover:text-blue-100 transition font-medium text-shadow">
+                            🚪 登出
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-white hover:text-blue-100 px-4 py-2 rounded-lg glass-button transition text-shadow">
+                            🔐 登录
+                        </a>
+                        <a href="{% url 'register' %}" class="glass-button ripple text-white px-4 py-2 rounded-lg hover:text-blue-100 transition font-medium text-shadow">
+                            ✨ 注册
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 消息提示 - 增强效果 -->
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 relative z-10">
+        {% for message in messages %}
+        <div class="glass-card rounded-2xl p-4 mb-4 text-white text-shadow-strong border-l-4 card-border-glow
+                    {% if message.tags == 'error' %}border-red-400{% elif message.tags == 'warning' %}border-yellow-400{% elif message.tags == 'success' %}border-green-400{% else %}border-blue-400{% endif %}
+                    animate-slideIn">
+            <span class="block sm:inline font-medium">{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+    {% endif %}
+
+    <!-- 主内容 -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 页脚 - 增强效果 -->
+    <footer class="glass mt-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <p class="text-center text-white text-shadow font-medium">
+                ✨ &copy; 2026 AI大模型管理系统 | 基于Django开发 | Glassmorphism UI Design 💎
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

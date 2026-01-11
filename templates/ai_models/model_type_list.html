@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}模型类型管理 - AI大模型管理系统{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- 页面标题和操作按钮 -->
+    <div class="glass-card rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-4xl font-bold text-white text-shadow-strong">🏷️ 模型类型管理</h1>
+            {% if user.is_authenticated %}
+            <a href="{% url 'model_type_create' %}" class="glass-button ripple text-white px-6 py-3 rounded-xl font-medium text-shadow">
+                ➕ 创建新类型
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="glass-card rounded-2xl p-4 text-white text-shadow-strong border-l-4 border-yellow-400 card-border-glow animate-slideIn">
+        ℹ️ 您未登录，只能查看类型信息。<a href="{% url 'login' %}" class="font-bold underline hover:text-yellow-200 transition">登录</a>后可进行编辑操作。
+    </div>
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+    {% endif %}
+
+    <!-- 类型列表 - 带3D倾斜效果的玻璃卡片 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for type in types %}
+        <div class="glass-card glass-card-3d rounded-2xl p-6 card-border-glow">
+            <div class="flex items-start justify-between mb-4">
+                <h2 class="text-2xl font-bold text-white text-shadow-strong">{{ type.name }}</h2>
+                <span class="px-3 py-1 text-xs font-bold rounded-full glass-button text-white text-shadow badge-glow">
+                    {{ type.ai_models.count }} 个模型
+                </span>
+            </div>
+
+            {% if type.description %}
+            <p class="text-white/90 text-sm mb-4 font-medium text-shadow">{{ type.description|truncatewords:20 }}</p>
+            {% else %}
+            <p class="text-white/70 text-sm mb-4 italic text-shadow">暂无描述</p>
+            {% endif %}
+
+            <div class="text-xs text-white/80 mb-4 font-medium text-shadow">
+                📅 创建于: {{ type.created_at|date:"Y-m-d H:i" }}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="flex space-x-2 pt-4 border-t-2 border-white/20">
+                <a href="{% url 'model_type_edit' type.pk %}" class="flex-1 text-center glass-button ripple text-white px-4 py-2 rounded-xl transition text-sm font-bold text-shadow">
+                    ✏️ 编辑
+                </a>
+                <a href="{% url 'model_type_delete' type.pk %}" class="flex-1 text-center glass-button ripple text-white px-4 py-2 rounded-xl transition text-sm font-bold text-shadow" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));">
+                    🗑️ 删除
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-16 glass-card rounded-2xl">
+            <div class="text-6xl mb-4 animate-bounce">📦</div>
+            <p class="text-white text-xl text-shadow-strong font-bold mb-4">暂无模型类型</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'model_type_create' %}" class="mt-4 inline-block glass-button ripple text-white px-8 py-3 rounded-xl font-bold text-shadow">
+                ✨ 创建第一个类型
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

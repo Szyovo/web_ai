@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}删除类型确认 - AI大模型管理系统{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="{% url 'model_type_list' %}" class="text-blue-600 hover:text-blue-800">
+            ← 返回类型列表
+        </a>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-8">
+        <div class="flex items-center mb-6">
+            <div class="flex-shrink-0 bg-red-100 rounded-full p-3">
+                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h1 class="ml-4 text-2xl font-bold text-gray-900">确认删除类型</h1>
+        </div>
+
+        <div class="mb-6">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            <strong>警告：</strong>删除此类型将会同时删除所有关联的 <strong class="text-red-600">{{ related_models_count }}</strong> 个AI模型！此操作无法撤销。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-gray-700 mb-2">您确定要删除以下类型吗？</p>
+            <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                <dl class="space-y-2">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">类型名称</dt>
+                        <dd class="mt-1 text-sm text-gray-900 font-semibold">{{ model_type.name }}</dd>
+                    </div>
+                    {% if model_type.description %}
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">描述</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ model_type.description }}</dd>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">关联模型数量</dt>
+                        <dd class="mt-1 text-sm text-red-600 font-bold">{{ related_models_count }} 个模型将被删除</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <form method="post" class="flex space-x-4">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition font-medium">
+                确认删除（包括 {{ related_models_count }} 个关联模型）
+            </button>
+            <a href="{% url 'model_type_list' %}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition font-medium">
+                取消
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

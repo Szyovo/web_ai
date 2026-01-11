@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}AI模型列表 - AI大模型管理系统{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- 页面标题和操作按钮 -->
+    <div class="glass-card rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-4xl font-bold text-white text-shadow-strong">✨ AI大模型列表</h1>
+            <div class="flex space-x-3">
+                {% if user.is_authenticated %}
+                <a href="{% url 'ai_model_create' %}" class="glass-button ripple text-white px-6 py-3 rounded-xl font-medium text-shadow">
+                    ➕ 创建新模型
+                </a>
+                {% endif %}
+                <a href="{% url 'export_models_csv' %}?{{ request.GET.urlencode }}" class="glass-button ripple text-white px-6 py-3 rounded-xl font-medium text-shadow">
+                    📥 导出CSV
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索和过滤 -->
+    <div class="glass-card rounded-2xl p-6 card-border-glow">
+        <h2 class="text-xl font-bold text-white text-shadow mb-4">🔍 搜索和筛选</h2>
+        <form method="get" class="flex flex-wrap gap-4">
+            <div class="flex-1 min-w-[200px]">
+                <input type="text" name="keyword" value="{{ request.GET.keyword }}"
+                    placeholder="🔍 搜索模型名称、开发者..."
+                    class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/70 focus:ring-2 focus:ring-white/30">
+            </div>
+            <div class="w-48">
+                <select name="model_type" class="glass-select w-full px-4 py-3 rounded-xl text-white">
+                    <option value="">全部类型</option>
+                    {% for type in search_form.model_type.field.queryset %}
+                    <option value="{{ type.id }}" {% if request.GET.model_type == type.id|stringformat:"s" %}selected{% endif %}>
+                        {{ type.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="glass-button ripple text-white px-6 py-3 rounded-xl font-medium text-shadow">
+                🔍 搜索
+            </button>
+            <a href="{% url 'ai_model_list' %}" class="glass-button ripple text-white px-6 py-3 rounded-xl font-medium text-shadow">
+                🔄 重置
+            </a>
+        </form>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="glass-card rounded-2xl p-4 text-white text-shadow-strong border-l-4 border-yellow-400 card-border-glow animate-slideIn">
+        ℹ️ 您未登录，只能查看模型信息。<a href="{% url 'login' %}" class="font-bold underline hover:text-yellow-200 transition">登录</a>后可进行编辑操作。
+    </div>
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+    {% endif %}
+
+    <!-- 模型列表 -->
+    <div class="glass-card rounded-2xl overflow-hidden">
+        {% if models %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="glass-strong">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">🎯 模型名称</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">📌 版本</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">🏷️ 类型</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">👤 开发者</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">🔢 参数量</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">📊 准确率</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">🔓 开源</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white text-shadow-strong">⚡ 操作</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10">
+                    {% for model in models %}
+                    <tr class="hover:bg-white/10 transition-all duration-300 hover:shadow-lg">
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-bold text-white text-shadow">{{ model.name }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-white/90 font-medium">{{ model.version }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full glass-button text-white text-shadow badge-glow">
+                                {{ model.model_type.name }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-white/90 font-medium">
+                            {{ model.developer }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-white/90 font-mono">
+                            {{ model.parameters_count|floatformat:0 }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-white/90 font-bold">
+                            {{ model.accuracy_score }}%
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if model.is_open_source %}
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-green-500/40 text-green-100 border-2 border-green-400/60 backdrop-blur-sm badge-glow">
+                                ✓ 是
+                            </span>
+                            {% else %}
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-red-500/40 text-red-100 border-2 border-red-400/60 backdrop-blur-sm">
+                                ✗ 否
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-sm font-bold space-x-3 whitespace-nowrap">
+                            <a href="{% url 'ai_model_detail' model.pk %}" class="text-blue-200 hover:text-blue-100 text-shadow transition-all hover:scale-110 inline-block">👁️ 查看</a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'ai_model_edit' model.pk %}" class="text-indigo-200 hover:text-indigo-100 text-shadow transition-all hover:scale-110 inline-block">✏️ 编辑</a>
+                            <a href="{% url 'ai_model_delete' model.pk %}" class="text-red-200 hover:text-red-100 text-shadow transition-all hover:scale-110 inline-block">🗑️ 删除</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 分页 - 增强效果 -->
+        {% if models.has_other_pages %}
+        <div class="glass-strong px-4 py-4 flex items-center justify-between border-t-2 border-white/20">
+            <div class="flex-1 flex justify-between sm:hidden">
+                {% if models.has_previous %}
+                <a href="?page={{ models.previous_page_number }}&{{ request.GET.urlencode }}"
+                   class="glass-button ripple relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white text-shadow">
+                    ← 上一页
+                </a>
+                {% endif %}
+                {% if models.has_next %}
+                <a href="?page={{ models.next_page_number }}&{{ request.GET.urlencode }}"
+                   class="glass-button ripple ml-3 relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white text-shadow">
+                    下一页 →
+                </a>
+                {% endif %}
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-white text-shadow-strong font-medium">
+                        显示第 <span class="font-bold text-yellow-200">{{ models.start_index }}</span> 到 <span class="font-bold text-yellow-200">{{ models.end_index }}</span> 条，
+                        共 <span class="font-bold text-yellow-200">{{ models.paginator.count }}</span> 条记录
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-xl shadow-sm space-x-2" aria-label="Pagination">
+                        {% if models.has_previous %}
+                        <a href="?page=1&{{ request.GET.urlencode }}"
+                           class="glass-button ripple relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white text-shadow transition-all">
+                            ⏮️ 首页
+                        </a>
+                        <a href="?page={{ models.previous_page_number }}&{{ request.GET.urlencode }}"
+                           class="glass-button ripple relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white text-shadow transition-all">
+                            ← 上一页
+                        </a>
+                        {% endif %}
+
+                        <span class="glass-strong relative inline-flex items-center px-6 py-2 rounded-lg text-sm font-bold text-yellow-200 text-shadow-strong border-2 border-white/30">
+                            第 {{ models.number }} / {{ models.paginator.num_pages }} 页
+                        </span>
+
+                        {% if models.has_next %}
+                        <a href="?page={{ models.next_page_number }}&{{ request.GET.urlencode }}"
+                           class="glass-button ripple relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white text-shadow transition-all">
+                            下一页 →
+                        </a>
+                        <a href="?page={{ models.paginator.num_pages }}&{{ request.GET.urlencode }}"
+                           class="glass-button ripple relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white text-shadow transition-all">
+                            末页 ⏭️
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="text-center py-16">
+            <div class="text-6xl mb-4 animate-bounce">🔍</div>
+            <p class="text-white text-xl text-shadow-strong font-bold mb-4">暂无模型数据</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'ai_model_create' %}" class="mt-4 inline-block glass-button ripple text-white px-8 py-3 rounded-xl font-bold text-shadow">
+                ✨ 创建第一个模型
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

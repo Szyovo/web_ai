@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}用户注册 - AI大模型管理系统{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+            <h2 class="mt-6 text-4xl font-extrabold text-white text-shadow">
+                ✨ 创建新账户
+            </h2>
+            <p class="mt-2 text-center text-sm text-white/80 text-shadow">
+                已有账户？
+                <a href="{% url 'login' %}" class="font-medium text-white hover:text-blue-200 underline">
+                    立即登录
+                </a>
+            </p>
+        </div>
+        <form class="mt-8 space-y-6 glass-card p-8 rounded-2xl" method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-500/30 border border-red-400/50 text-white px-4 py-3 rounded-xl text-shadow">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <div class="space-y-4">
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-white mb-2 text-shadow">
+                        用户名
+                    </label>
+                    <input type="text" name="username" id="{{ form.username.id_for_label }}"
+                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
+                           placeholder="选择一个用户名"
+                           required>
+                    {% if form.username.errors %}
+                    <p class="mt-1 text-sm text-red-200 text-shadow">{{ form.username.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-white mb-2 text-shadow">
+                        电子邮箱
+                    </label>
+                    <input type="email" name="email" id="{{ form.email.id_for_label }}"
+                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
+                           placeholder="your@email.com"
+                           required>
+                    {% if form.email.errors %}
+                    <p class="mt-1 text-sm text-red-200 text-shadow">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-white mb-2 text-shadow">
+                        密码
+                    </label>
+                    <input type="password" name="password1" id="{{ form.password1.id_for_label }}"
+                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
+                           placeholder="设置密码"
+                           required>
+                    {% if form.password1.errors %}
+                    <p class="mt-1 text-sm text-red-200 text-shadow">{{ form.password1.errors.0 }}</p>
+                    {% endif %}
+                    <p class="mt-1 text-xs text-white/60 text-shadow">密码至少8位，不能全是数字</p>
+                </div>
+
+                <div>
+                    <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-white mb-2 text-shadow">
+                        确认密码
+                    </label>
+                    <input type="password" name="password2" id="{{ form.password2.id_for_label }}"
+                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
+                           placeholder="再次输入密码"
+                           required>
+                    {% if form.password2.errors %}
+                    <p class="mt-1 text-sm text-red-200 text-shadow">{{ form.password2.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 glass-button text-white rounded-xl hover:scale-105 transition-transform font-medium text-shadow">
+                    🚀 注册
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
