@@ -53,8 +53,15 @@ def login_view(request):
                 request.session['user_id'] = user.id
                 request.session['username'] = user.username
                 messages.success(request, f'欢迎回来，{username}！')
-                next_url = request.GET.get('next', 'ai_model_list')
-                return redirect(next_url)
+
+                # 获取next参数，优先从POST中获取（表单提交），其次从GET中获取
+                next_url = request.POST.get('next') or request.GET.get('next')
+
+                # 安全检查：确保next_url是相对路径，防止开放重定向漏洞
+                if next_url and next_url.startswith('/') and not next_url.startswith('//'):
+                    return redirect(next_url)
+                else:
+                    return redirect('ai_model_list')
     else:
         form = UserLoginForm()
 
