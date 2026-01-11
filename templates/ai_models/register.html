@@ -42,14 +42,17 @@
             <div class="space-y-5">
                 <!-- 用户名输入 -->
                 <div>
-                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-bold text-white mb-2 text-shadow">
-                        👤 用户名
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-bold text-white mb-3 text-shadow">
+                        用户名
                     </label>
-                    <input type="text" name="username" id="{{ form.username.id_for_label }}"
-                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
-                           placeholder="选择一个独特的用户名"
-                           required
-                           autofocus>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" name="username" id="{{ form.username.id_for_label }}"
+                               class="glass-input glass-input-with-icon w-full py-3.5 rounded-xl text-white placeholder-white/50"
+                               placeholder="选择一个独特的用户名"
+                               required
+                               autofocus>
+                    </div>
                     {% if form.username.errors %}
                     <p class="mt-2 text-sm text-red-200 text-shadow flex items-center">
                         <span class="mr-1">❌</span>{{ form.username.errors.0 }}
@@ -59,13 +62,16 @@
 
                 <!-- 邮箱输入 -->
                 <div>
-                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-bold text-white mb-2 text-shadow">
-                        📧 电子邮箱
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-bold text-white mb-3 text-shadow">
+                        电子邮箱
                     </label>
-                    <input type="email" name="email" id="{{ form.email.id_for_label }}"
-                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
-                           placeholder="your@email.com"
-                           required>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📧</span>
+                        <input type="email" name="email" id="{{ form.email.id_for_label }}"
+                               class="glass-input glass-input-with-icon w-full py-3.5 rounded-xl text-white placeholder-white/50"
+                               placeholder="your@email.com"
+                               required>
+                    </div>
                     {% if form.email.errors %}
                     <p class="mt-2 text-sm text-red-200 text-shadow flex items-center">
                         <span class="mr-1">❌</span>{{ form.email.errors.0 }}
@@ -78,13 +84,16 @@
 
                 <!-- 密码输入 -->
                 <div>
-                    <label for="{{ form.password1.id_for_label }}" class="block text-sm font-bold text-white mb-2 text-shadow">
-                        🔑 密码
+                    <label for="{{ form.password1.id_for_label }}" class="block text-sm font-bold text-white mb-3 text-shadow">
+                        密码
                     </label>
-                    <input type="password" name="password1" id="{{ form.password1.id_for_label }}"
-                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
-                           placeholder="设置一个安全的密码"
-                           required>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔑</span>
+                        <input type="password" name="password1" id="{{ form.password1.id_for_label }}"
+                               class="glass-input glass-input-with-icon w-full py-3.5 rounded-xl text-white placeholder-white/50"
+                               placeholder="设置一个安全的密码"
+                               required>
+                    </div>
                     {% if form.password1.errors %}
                     <p class="mt-2 text-sm text-red-200 text-shadow flex items-center">
                         <span class="mr-1">❌</span>{{ form.password1.errors.0 }}
@@ -99,13 +108,16 @@
 
                 <!-- 确认密码 -->
                 <div>
-                    <label for="{{ form.password2.id_for_label }}" class="block text-sm font-bold text-white mb-2 text-shadow">
-                        🔐 确认密码
+                    <label for="{{ form.password2.id_for_label }}" class="block text-sm font-bold text-white mb-3 text-shadow">
+                        确认密码
                     </label>
-                    <input type="password" name="password2" id="{{ form.password2.id_for_label }}"
-                           class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/30"
-                           placeholder="再次输入密码确认"
-                           required>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔐</span>
+                        <input type="password" name="password2" id="{{ form.password2.id_for_label }}"
+                               class="glass-input glass-input-with-icon w-full py-3.5 rounded-xl text-white placeholder-white/50"
+                               placeholder="再次输入密码确认"
+                               required>
+                    </div>
                     {% if form.password2.errors %}
                     <p class="mt-2 text-sm text-red-200 text-shadow flex items-center">
                         <span class="mr-1">❌</span>{{ form.password2.errors.0 }}
