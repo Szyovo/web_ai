@@ -20,6 +20,13 @@ class UserRegisterForm(UserCreationForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 
+    def clean_email(self):
+        """验证邮箱是否已存在"""
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('该邮箱已被注册，请使用其他邮箱。')
+        return email
+
 
 class UserLoginForm(AuthenticationForm):
     """用户登录表单"""
